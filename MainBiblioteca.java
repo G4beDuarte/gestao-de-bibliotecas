@@ -10,14 +10,15 @@ public class MainBiblioteca {
         System.out.flush();
     }
 
-    private static int  inputNumerico(String mensagem){
+    private static int inputNumerico(String mensagem){
         int valor = 0;
         boolean entradaValida = false;
-        System.out.println(mensagem);
         do{
+            System.out.println(mensagem);
             String valorStr = input.nextLine();
             try {
                 valor = Integer.parseInt(valorStr);
+                entradaValida = true;
             } catch (Exception e) {
                 System.out.println("Erro. Por favor informe um número Inteiro");
             }
@@ -31,6 +32,20 @@ public class MainBiblioteca {
         livros.sort(Comparator.comparing(Livro::getTitulo));
         
         System.out.println("========== LISTA DE LIVROS ==========");
+        for (Livro livro : livros) {
+            System.out.println("Título: " + livro.getTitulo());
+            System.out.println("Autor: " + livro.getAutor());
+            System.out.println("Ano: " + livro.getAnoPublicacao());
+            System.out.println("N. Paginas: " + livro.getnPaginas());
+        }
+
+    }
+
+    private static void pesquisarPorTitulo(){
+        System.out.println("========== LISTA DE LIVROS ==========");
+        System.out.println("Digite o titulo do livro que está procurando: ");
+        String titulo = input.nextLine();
+        var livros = biblio.pesquisarPorTitulo(titulo);
         for (Livro livro : livros) {
             System.out.println("Título: " + livro.getTitulo());
             System.out.println("Autor: " + livro.getAutor());
@@ -67,6 +82,18 @@ public class MainBiblioteca {
         input.nextLine();
     }
 
+    public static void removerPorTitulo(){
+        System.out.println("========== REMOVENDO LIVRO ==========");
+        System.out.print("Digite o título do livro que deseja remover: ");
+        String titulo = input.nextLine();
+        try{
+            biblio.removerPorTitulo(titulo);
+            System.out.println("Livro removido com sucesso!");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
     public static void main(String[] args) throws Exception {
 
         String menu = """
@@ -80,9 +107,7 @@ public class MainBiblioteca {
                 """;
         int opcao;
         do {
-            System.out.println(menu);
-            opcao = input.nextInt();
-            input.nextLine(); //limpar buffer
+            opcao = inputNumerico(menu);
             switch (opcao) {
                 case 0:
                     limparTela();
@@ -95,12 +120,20 @@ public class MainBiblioteca {
                 case 2:
                     limparTela();
                     listar();
+                    input.nextLine();
+                    limparTela();
                     break;
                 case 3:
-                    //pesquisar por titulo
+                    limparTela();
+                    pesquisarPorTitulo();
+                    input.nextLine();
+                    limparTela();
                     break;
                 case 4:
-                    //remover
+                    limparTela();
+                    removerPorTitulo();
+                    input.nextLine();
+                    limparTela();
                     break;
                 default:
                     limparTela();
