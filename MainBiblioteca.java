@@ -33,10 +33,8 @@ public class MainBiblioteca {
         
         System.out.println("========== LISTA DE LIVROS ==========");
         for (Livro livro : livros) {
-            System.out.println("Título: " + livro.getTitulo());
-            System.out.println("Autor: " + livro.getAutor());
-            System.out.println("Ano: " + livro.getAnoPublicacao());
-            System.out.println("N. Paginas: " + livro.getnPaginas());
+            System.out.println(livro.toString());
+            System.out.println("--------------------------------------");
         }
 
     }
@@ -45,19 +43,31 @@ public class MainBiblioteca {
         System.out.println("========== LISTA DE LIVROS ==========");
         System.out.println("Digite o titulo do livro que está procurando: ");
         String titulo = input.nextLine();
-        var livros = biblio.pesquisarPorTitulo(titulo);
-        for (Livro livro : livros) {
-            System.out.println("Título: " + livro.getTitulo());
-            System.out.println("Autor: " + livro.getAutor());
-            System.out.println("Ano: " + livro.getAnoPublicacao());
-            System.out.println("N. Paginas: " + livro.getnPaginas());
+        var livros = biblio.pesquisar(titulo);
+        if (livros.isEmpty())
+        System.out.println("Não foram encontrados livros com esta pesquisa.");
+        else {
+            for (Livro livro : livros) {
+                System.out.println("Título: " + livro.getTitulo());
+                System.out.println("Autor: " + livro.getAutor());
+                System.out.println("Ano: " + livro.getAnoPublicacao());
+                System.out.println("N. Paginas: " + livro.getnPaginas());
+            }
         }
-
     }
 
     private static void adicionar() throws Exception {
-        Livro novoLivro = new Livro();
+        Livro novoLivro;
         System.out.println("========== ADICIONANDO NOVO LIVRO ==========");
+        int tipoLivro = inputNumerico("Qual o tipo de livro: (1) Físico - (2) Digital");
+        if (tipoLivro == 1){
+            novoLivro = new LivroFisico();
+        }else if (tipoLivro == 2){
+            novoLivro = new LivroDigital();
+        }else {
+            novoLivro = new Livro();
+        }
+
         System.out.print("Informe o título do Livro: ");
         String titulo = input.nextLine();
         novoLivro.setTitulo(titulo);
@@ -72,6 +82,18 @@ public class MainBiblioteca {
         System.out.print("Informe o número de paginas: ");
         novoLivro.setnPaginas(input.nextInt());
         input.nextLine(); //buffer
+
+        if (tipoLivro == 1){
+            int nExemplares = inputNumerico("Informe o nº de exemplares: ");
+            ((LivroFisico) novoLivro).setnExemplares(nExemplares);
+            System.out.print("Digite as dimensões: ");
+            String dimensoes = input.nextLine();
+            ((LivroFisico) novoLivro).setDimensoes(dimensoes);
+        }else if (tipoLivro == 2){
+            System.out.print("Digite o formato do arquivo: ");
+            String formatoArquivo = input.nextLine();
+            ((LivroDigital) novoLivro).setFormatoArquivo(formatoArquivo);
+        }
 
         try {
             biblio.adicionar(novoLivro);
