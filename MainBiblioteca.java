@@ -10,10 +10,10 @@ public class MainBiblioteca {
         System.out.flush();
     }
 
-    private static int inputNumerico(String mensagem){
+    private static int inputNumerico(String mensagem) {
         int valor = 0;
         boolean entradaValida = false;
-        do{
+        do {
             System.out.println(mensagem);
             String valorStr = input.nextLine();
             try {
@@ -26,26 +26,27 @@ public class MainBiblioteca {
         return valor;
     }
 
-    private static void listar(){
+    private static void listar() {
         // List<Livro> livros = biblio.pesquisarTodos();
         var livros = biblio.pesquisarTodos();
         livros.sort(Comparator.comparing(Livro::getTitulo));
-        
+
         System.out.println("========== LISTA DE LIVROS ==========");
         for (Livro livro : livros) {
+            System.out.println(livro.getFormato());
             System.out.println(livro.toString());
             System.out.println("--------------------------------------");
         }
 
     }
 
-    private static void pesquisarPorTitulo(){
+    private static void pesquisarPorTitulo() {
         System.out.println("========== LISTA DE LIVROS ==========");
         System.out.println("Digite o titulo do livro que está procurando: ");
         String titulo = input.nextLine();
         var livros = biblio.pesquisar(titulo);
         if (livros.isEmpty())
-        System.out.println("Não foram encontrados livros com esta pesquisa.");
+            System.out.println("Não foram encontrados livros com esta pesquisa.");
         else {
             for (Livro livro : livros) {
                 System.out.println("Título: " + livro.getTitulo());
@@ -57,16 +58,19 @@ public class MainBiblioteca {
     }
 
     private static void adicionar() throws Exception {
-        Livro novoLivro;
+        Livro novoLivro = null;
         System.out.println("========== ADICIONANDO NOVO LIVRO ==========");
-        int tipoLivro = inputNumerico("Qual o tipo de livro: (1) Físico - (2) Digital");
-        if (tipoLivro == 1){
-            novoLivro = new LivroFisico();
-        }else if (tipoLivro == 2){
-            novoLivro = new LivroDigital();
-        }else {
-            novoLivro = new Livro();
-        }
+        int tipoLivro;
+        do {
+            tipoLivro = inputNumerico("Qual o tipo de livro: (1) Físico - (2) Digital");
+            if (tipoLivro == 1) {
+                novoLivro = new LivroFisico();
+            } else if (tipoLivro == 2) {
+                novoLivro = new LivroDigital();
+            } else {
+                System.out.println("Opção inválida!");
+            }
+        } while (novoLivro == null);
 
         System.out.print("Informe o título do Livro: ");
         String titulo = input.nextLine();
@@ -77,19 +81,19 @@ public class MainBiblioteca {
 
         System.out.print("Informe o ano de lançamento: ");
         novoLivro.setAnoPublicacao(input.nextInt());
-        input.nextLine(); //buffer
+        input.nextLine(); // buffer
 
         System.out.print("Informe o número de paginas: ");
         novoLivro.setnPaginas(input.nextInt());
-        input.nextLine(); //buffer
+        input.nextLine(); // buffer
 
-        if (tipoLivro == 1){
+        if (tipoLivro == 1) {
             int nExemplares = inputNumerico("Informe o nº de exemplares: ");
             ((LivroFisico) novoLivro).setnExemplares(nExemplares);
             System.out.print("Digite as dimensões: ");
             String dimensoes = input.nextLine();
             ((LivroFisico) novoLivro).setDimensoes(dimensoes);
-        }else if (tipoLivro == 2){
+        } else if (tipoLivro == 2) {
             System.out.print("Digite o formato do arquivo: ");
             String formatoArquivo = input.nextLine();
             ((LivroDigital) novoLivro).setFormatoArquivo(formatoArquivo);
@@ -104,14 +108,14 @@ public class MainBiblioteca {
         input.nextLine();
     }
 
-    public static void removerPorTitulo(){
+    public static void removerPorTitulo() {
         System.out.println("========== REMOVENDO LIVRO ==========");
         System.out.print("Digite o título do livro que deseja remover: ");
         String titulo = input.nextLine();
-        try{
+        try {
             biblio.removerPorTitulo(titulo);
             System.out.println("Livro removido com sucesso!");
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -165,5 +169,5 @@ public class MainBiblioteca {
             }
 
         } while (opcao != 0);
-    } 
+    }
 }
